@@ -98,5 +98,25 @@ Dog.prototype.humanYears = function () {
 myPuppy.speak();
 
 
+//Business logic
+function Contact(first,last) {
+	this.firstName = first;
+	this.lastName = last;
+}
 
+//User interface logic
+$(function(){
+	$("form#new-contact").submit(function (event) {
+		event.preventDefault()
+		let enteredFirstName = $("input#new-first-name").val();
+		let enteredLastName = $("input#new-last-name").val();
+		
+		let newContact = new Contact(enteredFirstName,enteredLastName);
+		
+		$("ul#contacts").append("<li><span class='contact'>" + newContact.firstName + "</span></li>");
+		
+		$("input#new-first-name").val("");
+		$("input#new-last-name").val("");
+	});
+});
 
