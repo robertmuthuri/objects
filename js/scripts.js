@@ -118,40 +118,23 @@ function Address(street,city,county) {
 Contact.prototype.fullName = function() {
 	return this.firstName + " " + this.lastName;
 };
+//define object method to return full address
+Address.prototype.fullAddress = function() {
+	return this.street + ", " + this.city + ", " + this.county;
+};
+
+function resetFields() {
+	$("input#new-first-name").val("");
+	$("input#new-last-name").val("");
+	$("input.new-street").val("");
+	$("input.new-city").val("");
+	$("input.new-county").val("");
+}
 
 //User interface logic
 $(function(){
-	$("form#new-contact").submit(function(event) {
-		event.preventDefault();
-		let enteredFirstName = $("input#new-first-name").val();
-		let enteredLastName = $("input#new-last-name").val();
-		
-		let newContact = new Contact(enteredFirstName,enteredLastName);
-		
-		//loop through address form field to collect info and create an address object to push them to the contact object's address property
-		$(".new-address").each(function () {
-			let enteredStreet = $(this).find("input.new-street").val();
-			let enteredCity = $(this).find("input.new-city").val();
-			let enteredCounty = $(this).find("input.new-county").val();
-			
-			let newAddress = new Address(enteredStreet,enteredCity,enteredCounty);
-		});
-		
-		$("ul#contacts").append("<li><span class='contact'>" + newContact.fullName() + "</span></li>");
-		
-		$("input#new-first-name").val("");
-		$("input#new-last-name").val("");
-
-		$(".contact").last().click(function() {
-			$("#show-contact").show();
-			$("#show-contact h2").text(newContact.firstName);
-			$(".first-name").text(newContact.firstName);
-			$(".last-name").text(newContact.lastName);
-		});
-	});
-	
-	$("div#add-address").click(function () {
-		$("div#new-addresses").append('<div class="new-address">' +
+	$("#add-address").click(function () {
+		$("#new-addresses").append('<div class="new-address">' +
 										'<div class="form-group">' +
 											'<label for=new-street">Street</label>' +
 											'<input type="text" class="form-control new-street">' +
@@ -166,5 +149,41 @@ $(function(){
 										'</div>' +
 									'</div>');
 	});
+	
+	$("form#new-contact").submit(function(event) {
+		event.preventDefault();
+		let enteredFirstName = $("input#new-first-name").val();
+		let enteredLastName = $("input#new-last-name").val();
+		
+		let newContact = new Contact(enteredFirstName,enteredLastName);
+		
+		//loop through address form field to collect info and create an address object to push them to the contact object's address property
+		$(".new-address").each(function () {
+			let enteredStreet = $(this).find("input.new-street").val();
+			let enteredCity = $(this).find("input.new-city").val();
+			let enteredCounty = $(this).find("input.new-county").val();
+			
+			let newAddress = new Address(enteredStreet,enteredCity,enteredCounty);
+			newContact.addresses.push(newAddress);
+		});
+		
+		$("ul#contacts").append("<li><span class='contact'>" + newContact.fullName() + "</span></li>");
+
+		$(".contact").last().click(function() {
+			$("#show-contact").show();
+			$("#show-contact h2").text(newContact.firstName);
+			$(".first-name").text(newContact.firstName);
+			$(".last-name").text(newContact.lastName);
+			
+			//add addresses to the list
+			$("ul#addresses").text("");
+			newContact.addresses.forEach(function (address) {
+				// $("ul#addresses").append("<li>" + address.street + ", " + address.city + ", " + address.county + "<li>");
+				$("ul#addresses").append("<li>" + address.fullAddress() + "</li>");
+			});
+		});
+	resetFields();
+	});
+	
 });
 
