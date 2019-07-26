@@ -128,6 +128,15 @@ $(function(){
 		
 		let newContact = new Contact(enteredFirstName,enteredLastName);
 		
+		//loop through address form field to collect info and create an address object to push them to the contact object's address property
+		$(".new-address").each(function () {
+			let enteredStreet = $(this).find("input.new-street").val();
+			let enteredCity = $(this).find("input.new-city").val();
+			let enteredCounty = $(this).find("input.new-county").val();
+			
+			let newAddress = new Address(enteredStreet,enteredCity,enteredCounty);
+		});
+		
 		$("ul#contacts").append("<li><span class='contact'>" + newContact.fullName() + "</span></li>");
 		
 		$("input#new-first-name").val("");
@@ -139,6 +148,23 @@ $(function(){
 			$(".first-name").text(newContact.firstName);
 			$(".last-name").text(newContact.lastName);
 		});
+	});
+	
+	$("div#add-address").click(function () {
+		$("div#new-addresses").append('<div class="new-address">' +
+										'<div class="form-group">' +
+											'<label for=new-street">Street</label>' +
+											'<input type="text" class="form-control new-street">' +
+			                            '</div>' +
+										'<div class="form-group">' +
+											'<label for="new-city">City</label>' +
+											'<input type="text" class="form-control new-city">' +
+										'</div>' +
+										'<div class="form-group">' +
+											'<label for="new-county"> County</label>' +
+											'<input type="text" class="form-control new-county">' +
+										'</div>' +
+									'</div>');
 	});
 });
 
